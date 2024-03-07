@@ -1,0 +1,27 @@
+---
+apiVersion: v1
+defaults:
+  loglevel: info
+  logformat: text
+relocate:
+  - name: move pdf
+    src: /Downloads
+    dst: /Documents
+    patterns:
+      - "*.pdf"
+    mode: move
+  - name: copy pictures
+    src: /Downloads
+    dst: /Pictures
+    patterns:
+      - "*.jpg"
+      - "*.png"
+    mode: copy
+cleanup:
+  - name: mac os foo
+    src: $HOME
+    patterns:
+      - ".DS_Store"
+      - ".AppleDouble"
+      - ".LSOverride"
+      - "._*"
