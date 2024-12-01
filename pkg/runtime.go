@@ -24,7 +24,7 @@ import (
 )
 
 // Version `[[VERSION]]` is replaced during pipeline build with the respective string
-const Version = "🍞 [[VERSION]]"
+const Version = "🍞 1.0.0"
 const VersionMajor = 1
 
 // struct representing the configuration file
