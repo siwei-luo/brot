@@ -1,5 +1,5 @@
 /*
-Copyright © 2021-2023 Siwei Luo <siwei@lu0.org>
+Copyright © 2021-2026 Siwei Luo <siwei@lu0.org>
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -16,14 +16,15 @@ limitations under the License.
 package pkg
 
 import (
-	log "github.com/sirupsen/logrus"
-	"github.com/spf13/viper"
 	"os"
 	"path/filepath"
+
+	log "github.com/sirupsen/logrus"
+	"github.com/spf13/viper"
 )
 
 func Relocate(dryRun bool) {
-	// log used configuration file
+	// log the used configuration file
 	log.Info("use config file: ", viper.ConfigFileUsed())
 
 	// iterate over relocate definitions from configuration
@@ -33,15 +34,15 @@ func Relocate(dryRun bool) {
 		srcDirectory := os.ExpandEnv(item.Source)
 		dstDirectory := os.ExpandEnv(item.Destination)
 
-		// get files from source directory
+		// get files from the source directory
 		relocateFiles := FilesFromDirectory(srcDirectory, item.Patterns)
 
-		// skip item if there are no files to relocate
+		// skip the item if there are no files to relocate
 		if relocateFiles == nil {
 			continue
 		}
 
-		// check if destination directory exists and skip if it is missing
+		// check if the destination directory exists and skip if it is missing
 		if _, err := os.Stat(dstDirectory); os.IsNotExist(err) {
 			log.WithFields(log.Fields{
 				"error": err,

@@ -1,5 +1,5 @@
 /*
-Copyright © 2021-2023 Siwei Luo <siwei@lu0.org>
+Copyright © 2021-2026 Siwei Luo <siwei@lu0.org>
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -16,12 +16,13 @@ limitations under the License.
 package cmd
 
 import (
+	"strconv"
+	"strings"
+
 	log "github.com/sirupsen/logrus"
 	"github.com/siwei-luo/brot/pkg"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
-	"strconv"
-	"strings"
 )
 
 var configurationFile string
