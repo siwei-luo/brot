@@ -57,12 +57,12 @@ func Relocate(dryRun bool) {
 			dstPath := filepath.Join(dstDirectory, srcFile)
 
 			// check if a file with the same name exists in destination
-			if _, err := os.Stat(dstPath); err == nil || os.IsExist(err) {
+			if _, err := os.Stat(dstPath); err == nil {
 				log.WithFields(log.Fields{
 					"src":  srcPath,
 					"dst":  dstDirectory,
 					"mode": item.Mode,
-				}).Warnf("skip file: %v\n", srcFile)
+				}).Warnf("skip file: %v", srcFile)
 				continue
 			}
 
@@ -93,7 +93,7 @@ func Relocate(dryRun bool) {
 				"src":  srcPath,
 				"dst":  dstDirectory,
 				"mode": item.Mode,
-			}).Infof("%v file: %v\n", item.Mode, srcFile)
+			}).Infof("%v file: %v", item.Mode, srcFile)
 
 		}
 	}

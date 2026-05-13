@@ -26,7 +26,7 @@ func Cleanup(dryRun bool) {
 	// log used configuration file
 	log.Info("use config file: ", viper.ConfigFileUsed())
 
-	// iterate over relocate definitions from configuration
+	// iterate over cleanup definitions from configuration
 	for _, item := range CurrentConfiguration.Cleanup {
 
 		// expand any environment variables
@@ -35,7 +35,7 @@ func Cleanup(dryRun bool) {
 		// get files from source directory
 		cleanupFiles := FilesFromDirectory(srcDirectory, item.Patterns)
 
-		// skip item if there are no files to relocate
+		// skip item if there are no files to cleanup
 		if cleanupFiles == nil {
 			continue
 		}
@@ -48,12 +48,13 @@ func Cleanup(dryRun bool) {
 						"error": err,
 						"src":   srcPath,
 					}).Error("error removing file")
+					continue
 				}
 			}
 
 			log.WithFields(log.Fields{
 				"src": srcPath,
-			}).Infof("remove file: %v\n", srcPath)
+			}).Infof("remove file: %v", srcPath)
 
 		}
 	}

@@ -17,6 +17,7 @@ package pkg
 
 import (
 	"errors"
+	"fmt"
 	"io"
 	"os"
 	"path/filepath"
@@ -59,7 +60,7 @@ func FilesFromDirectory(directory string, patterns []string) []string {
 	if err := filepath.Walk(directory, visit(patterns, &files)); err != nil {
 		log.WithFields(log.Fields{
 			"err": err,
-		}).Fatal("error reading directory")
+		}).Error("error reading directory")
 
 		return nil
 	}
@@ -75,18 +76,12 @@ func FileCopy(src string, dst string) (err error) {
 
 	// abort when source file is missing
 	if _, err := os.Stat(src); errors.Is(err, os.ErrNotExist) {
-		log.WithFields(log.Fields{
-			"err": err,
-		}).Fatal("error reading file")
-		return nil
+		return fmt.Errorf("source file not found: %w", err)
 	}
 
 	// abort if a file with the same name exists in the destination
 	if _, err := os.Stat(dst); err == nil {
-		log.WithFields(log.Fields{
-			"err": err,
-		}).Fatal("file already present in destination")
-		return nil
+		return fmt.Errorf("destination file already exists: %s", dst)
 	}
 
 	in, err := os.Open(filepath.Clean(src))
@@ -113,17 +108,24 @@ func FileCopy(src string, dst string) (err error) {
 }
 
 func FileMove(src string, dst string) (err error) {
-	if _, err := os.Stat(dst); errors.Is(err, os.ErrNotExist) {
-		return os.Rename(src, dst)
+	if _, err := os.Stat(dst); err == nil {
+		// destination exists, return error
+		return fmt.Errorf("destination file already exists: %s", dst)
+	} else if !errors.Is(err, os.ErrNotExist) {
+		// some other stat error occurred
+		return err
 	}
-	return err
+	// destination does not exist, safe to rename
+	return os.Rename(src, dst)
 }
 
 func FileRemove(src string) (err error) {
-	if _, err := os.Stat(src); err == nil {
-		return os.Remove(src)
+	if _, err := os.Stat(src); errors.Is(err, os.ErrNotExist) {
+		return fmt.Errorf("file not found: %w", err)
+	} else if err != nil {
+		return err
 	}
-	return err
+	return os.Remove(src)
 }
 
 func visit(patterns []string, files *[]string) filepath.WalkFunc {
@@ -155,10 +157,8 @@ func visit(patterns []string, files *[]string) filepath.WalkFunc {
 				log.WithFields(log.Fields{
 					"file": path,
 				}).Debug("matched file")
-			} else {
-				log.WithFields(log.Fields{
-					"file": path,
-				}).Debug("ignored file")
+				// only process one pattern match per file
+				break
 			}
 		}
 
