@@ -288,4 +288,3 @@ func TestCleanupEmptyDirectory(t *testing.T) {
 		t.Errorf("failed - directory should be empty, found %d files", len(files))
 	}
 }
-

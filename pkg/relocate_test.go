@@ -243,8 +243,3 @@ func TestRelocateEnvironmentVariables(t *testing.T) {
 		t.Errorf("failed - environment variable was not expanded correctly: %q", dstFile)
 	}
 }
-
-
-
-
-
