@@ -1,18 +1,3 @@
-/*
-Copyright © 2021-2026 Siwei Luo <siwei@lu0.org>
-
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-	http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
-*/
 package pkg
 
 import (
@@ -21,6 +6,7 @@ import (
 	"io"
 	"os"
 	"path/filepath"
+	"sort"
 
 	log "github.com/sirupsen/logrus"
 )
@@ -65,6 +51,8 @@ func FilesFromDirectory(directory string, patterns []string) []string {
 		return nil
 	}
 
+	sort.Strings(files)
+
 	log.WithFields(log.Fields{
 		"files": files,
 	}).Debug("found files")
@@ -74,12 +62,10 @@ func FilesFromDirectory(directory string, patterns []string) []string {
 
 func FileCopy(src string, dst string) (err error) {
 
-	// abort when source file is missing
 	if _, err := os.Stat(src); errors.Is(err, os.ErrNotExist) {
 		return fmt.Errorf("source file not found: %w", err)
 	}
 
-	// abort if a file with the same name exists in the destination
 	if _, err := os.Stat(dst); err == nil {
 		return fmt.Errorf("destination file already exists: %s", dst)
 	}
@@ -109,7 +95,6 @@ func FileCopy(src string, dst string) (err error) {
 
 func FileMove(src string, dst string) (err error) {
 	if _, err := os.Stat(dst); err == nil {
-		// destination exists, return error
 		return fmt.Errorf("destination file already exists: %s", dst)
 	} else if !errors.Is(err, os.ErrNotExist) {
 		// some other stat error occurred

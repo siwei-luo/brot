@@ -147,7 +147,7 @@ The logo is derived from the original version created by [Takuya Ueda](https://t
 
 ## License
 
-Copyright © 2021-2024 Siwei Luo <siwei@lu0.org>
+Copyright © 2021-2026 Siwei Luo <siwei@lu0.org>
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.

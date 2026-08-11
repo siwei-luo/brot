@@ -13,6 +13,10 @@ fmt:
 	@go fmt ./...
 .PHONY: fmt
 
+test:
+	go test ./...
+.PHONY: test
+
 vet: fmt
 	@go vet ./...
 .PHONY: vet
