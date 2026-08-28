@@ -1,6 +1,7 @@
 package pkg
 
 import (
+	"crypto/sha256"
 	"errors"
 	"fmt"
 	"io"
@@ -111,6 +112,21 @@ func FileRemove(src string) (err error) {
 		return err
 	}
 	return os.Remove(src)
+}
+
+func FileChecksum(path string) (string, error) {
+	f, err := os.Open(path)
+	if err != nil {
+		return "", err
+	}
+	defer f.Close()
+
+	h := sha256.New()
+	if _, err := io.Copy(h, f); err != nil {
+		return "", err
+	}
+
+	return fmt.Sprintf("%x", h.Sum(nil)), nil
 }
 
 func visit(patterns []string, files *[]string) filepath.WalkFunc {
